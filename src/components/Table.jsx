@@ -3,12 +3,13 @@ import { useGLTF } from "@react-three/drei";
 import tableScene from "../assets/3d/Table.gltf";
 import { useConfigurator } from "../contexts/Configurator";
 import * as Three from "three";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { Vector3 } from "three";
 
 const ANIM_SPEED = 12;
 
 export function Table(props) {
+  const tableRef = useRef();
   const { nodes, materials } = useGLTF(tableScene);
   const { legs, legsColor, tableWidth } = useConfigurator();
 
@@ -16,9 +17,29 @@ export function Table(props) {
   const leftLegs = useRef();
   const rightLegs = useRef();
 
+  const {gl} = useThree();
+
+  const handleTouch = (e) => {
+    e.stopPropagation();
+    e.preventDefault()
+  }
+
   useEffect(() => {
-    materials.Metal.color = new Three.Color(legsColor)
-  });
+    materials.Metal.color = new Three.Color(legsColor);
+
+    const canvas = gl.domElement;
+    
+    canvas.addEventListener("touchstart", handleTouch);
+    canvas.addEventListener("touchend", handleTouch);
+    canvas.addEventListener("touchmove", handleTouch);
+
+    return () => {
+      canvas.removeEventListener("touchstart", handleTouch);
+      canvas.removeEventListener("touchend", handleTouch);
+      canvas.removeEventListener("touchmove", handleTouch);
+    };
+
+  }, [gl]);
 
   useFrame((_state, delta) => {
     const tableWidthScale = tableWidth / 100;
@@ -33,8 +54,11 @@ export function Table(props) {
     rightLegs.current.position.lerp(targetRightPosition, delta*ANIM_SPEED);    
   })
 
+  
+
+
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} ref={tableRef}>
       <mesh
         geometry={nodes.Plate.geometry}
         material={materials.Plate}
