@@ -9,7 +9,7 @@ import { Vector3 } from "three";
 const ANIM_SPEED = 12;
 
 export function Table(props) {
-  const tableRef = useRef();
+
   const { nodes, materials } = useGLTF(tableScene);
   const { legs, legsColor, tableWidth } = useConfigurator();
 
@@ -39,7 +39,7 @@ export function Table(props) {
       canvas.removeEventListener("touchmove", handleTouch);
     };
 
-  }, [gl]);
+  }, [gl, legsColor]);
 
   useFrame((_state, delta) => {
     const tableWidthScale = tableWidth / 100;
@@ -58,7 +58,7 @@ export function Table(props) {
 
 
   return (
-    <group {...props} dispose={null} ref={tableRef}>
+    <group {...props} dispose={null}>
       <mesh
         geometry={nodes.Plate.geometry}
         material={materials.Plate}
