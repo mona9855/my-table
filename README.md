@@ -8,7 +8,7 @@
 
 - Responsiveness: Responsive on all devices.
 
-Live Link: 
+- Live Link: 
 
-Screenshot of it:
+- Screenshot of it:
 ![fullProjectScreenshotp5](https://github.com/mona9855/my-table/assets/89538929/a6384abd-454b-447f-b9b0-085ff32d4a09)
